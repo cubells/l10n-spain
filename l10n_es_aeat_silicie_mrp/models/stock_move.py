@@ -26,6 +26,7 @@ class StockMove(models.Model):
             if move.product_id.product_tmpl_id.silicie_product_type == "none":
                 continue
             # Production
+            production = move.production_id or move.raw_material_production_id
             if move.location_id.usage == "production" and \
                     move.location_dest_id.usage == "internal":
                 is_silicie_move = True
@@ -38,7 +39,8 @@ class StockMove(models.Model):
                         "ir.sequence"].next_by_code("silicie.operation")
                 move.silice_tax_position = "1"
                 move.silicie_processing_id = \
-                    move.production_id.routing_id.silicie_processing_id
+                    production.silicie_processing_id or \
+                    production.routing_id.silicie_processing_id
             # Production BoM
             elif move.location_id.usage == "internal" and \
                     move.location_dest_id.usage == "production":
@@ -48,11 +50,12 @@ class StockMove(models.Model):
                 move.silicie_move_type_id = self.env.ref(
                     "l10n_es_aeat_silicie.aeat_move_type_silicie_a14")
                 if not move.silicie_operation_num:
-                    move.silicie_operation_num = self.env[
+                    movemove.silicie_operation_num = self.env[
                         "ir.sequence"].next_by_code("silicie.operation")
                 move.silice_tax_position = "1"
-                move.silicie_processing_id = move.production_id\
-                    .routing_id.silicie_processing_id
+                move.silicie_processing_id = \
+                    production.silicie_processing_id or \
+                    production.routing_id.silicie_processing_id
             # Loss
             elif move.location_id.usage == "internal" and \
                     move.location_dest_id.usage == "inventory" and \
