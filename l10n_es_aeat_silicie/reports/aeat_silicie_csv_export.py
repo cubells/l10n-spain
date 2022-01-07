@@ -23,7 +23,6 @@ class AeatSiliceCsv(models.AbstractModel):
         for move in moves:
             if move.send_silicie or move.not_declare:
                 continue
-            lot_moves = []
             values = move._prepare_values()
             writer.writerow(self.localize_floats(values))
 

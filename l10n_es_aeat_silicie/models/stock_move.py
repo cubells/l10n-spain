@@ -608,6 +608,9 @@ class StockMove(models.Model):
     def _prepare_values(self):
         self.ensure_one()
         data = self._get_data_dict()
+        alcoholic_grade = data["alcoholic_grade"]
+        if self.product_id.silicie_product_type == "beer":
+            alcoholic_grade = ''
         return {
             "Número Referencia Interno": self.id,
             "Número Asiento Previo": "",
@@ -645,7 +648,7 @@ class StockMove(models.Model):
             "Descripción de Producto": self.product_id.name.strip(),
             "Referencia Producto": self.product_id.default_code,
             "Densidad": data['density'],
-            "Grado Alcohólico": data["alcoholic_grade"],
+            "Grado Alcohólico": alcoholic_grade,
             "Cantidad de Alcohol Puro": data["absolute_alcohol"],
             "Porcentaje de Extracto": "",
             "Kg. - Extracto": "",
