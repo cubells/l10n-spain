@@ -102,24 +102,19 @@ class DeliveryCarrier(models.Model):
         def trace(title, data):
             _logger.debug('%s %s: %s' % (
                 method, title, etree.tostring(data['envelope'])))
-
-
         if method == 'TransmEnvio':
-            template = 'delivery_carrier_mrw.TransmEnvio'
+            template = 'delivery_mrw.TransmEnvio'
         elif method == 'TransmEtiquetaEnvio':
-            template = 'delivery_carrier_mrw.TransmEtiquetaEnvio'
+            template = 'delivery_mrw.TransmEtiquetaEnvio'
         else:
             template = False
-
         if template:
             xml_root = self.env.ref(template).render(data).decode()
-
         else:
             raise UserError(
                 _("Error.\n"
                   "No MRW template service found.")
             )
-
         history = HistoryPlugin()
         client = Client(
             wsdl='http://sagec-test.mrw.es/MRWEnvio.asmx?WSDL',
@@ -139,12 +134,10 @@ class DeliveryCarrier(models.Model):
             url_base = self.mrw_test_url
         else:
             url_base = self.mrw_prod_url
-
         data = '?Franq=%s&Ab=%s&Dep=&Pwd=%s&Usr=%s&NumEnv=%s' % (
             self.mrw_franchise_code, self.mrw_subscriber_code,
             self.mrw_password, self.mrw_username, picking.customer_tracking_ref
         )
-
         return url_base + data
 
     def mrw_rate_shipment(self, order):
@@ -214,19 +207,8 @@ class DeliveryCarrier(models.Model):
             'delivery_mask_types': '',
             'delivery_mask_fields': '',
             'delivery_assistant': '',
-
-
-
-
-
-
-
-
-
         }
-
         res = self.mrw_soap_send('TransmEnvio', 'TransmEnvio', data)
-
         if res['mensaje'] == 'ERROR':
             raise exceptions.UserError(
                 _('SEUR exception: %s') % res['mensaje'])
