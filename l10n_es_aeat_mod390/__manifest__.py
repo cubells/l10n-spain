@@ -1,4 +1,4 @@
-# Copyright 2017-2021 Tecnativa - Pedro M. Baeza
+# Copyright 2017-2023 Tecnativa - Pedro M. Baeza
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl
 
 {
